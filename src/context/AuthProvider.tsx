@@ -4,10 +4,12 @@ import type { ReactNode } from "react";
 import { signIn, signUp, logout } from "../api/auth";
 import { AuthContext } from "./AuthContext"; // Import context from separate file
 import type { User } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(false);
@@ -27,6 +29,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const handleLogOut = async () => {
     await logout();
     setUser(null);
+    navigate("/signin");
   };
 
   return (
