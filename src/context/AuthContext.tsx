@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useState } from "react";
+import type { ReactNode } from "react";
 import { signIn, signUp, logout } from "../api/auth";
 
 interface User { id: string; name: string; dob: string; email: string; }

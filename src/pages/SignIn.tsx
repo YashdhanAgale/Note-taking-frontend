@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { sendOtp, signIn } from "../api/auth";
+import { sendOtp } from "../api/auth";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { AuthContext } from "../context/AuthContext";
