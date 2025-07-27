@@ -138,8 +138,8 @@ const SignUp: React.FC = () => {
 
       {/* Right: decorative background */}
       <div
-        className="flex-1 hidden md:block bg-cover bg-center"
-        style={{ backgroundImage: `url('/your-static-folder/bg-large.png')` }}
+        className="flex-1 hidden md:block bg-cover bg-center pr-8 mr-8"
+        style={{ backgroundImage: `url('https://i.pinimg.com/736x/71/42/6c/71426c6e1d992c4f0d2537128587eb0a.jpg')` }}
       />
     </div>
   );

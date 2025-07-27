@@ -1,4 +1,3 @@
-// src/context/AuthContext.ts
 import { createContext } from "react";
 
 interface User {

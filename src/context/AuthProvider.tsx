@@ -1,8 +1,7 @@
-// src/context/AuthProvider.tsx
 import React, { useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import { signIn, signUp, logout } from "../api/auth";
-import { AuthContext } from "./AuthContext"; // Import context from separate file
+import { AuthContext } from "./AuthContext"; 
 import type { User } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 
