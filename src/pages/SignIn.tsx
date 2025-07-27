@@ -19,18 +19,29 @@ const SignIn: React.FC = () => {
       await sendOtp(email);
       setStep("otp");
       setError("");
-    } catch (e: any) {
-      setError(e.response?.data?.error || "Failed to send OTP");
-    }
+    } catch (e: unknown) {
+  if (e && typeof e === "object" && "response" in e) {
+    const error = e as { response?: { data?: { error?: string } } };
+    setError(error.response?.data?.error || "Failed to send OTP");
+  } else {
+    setError("Failed to send OTP");
+  }
+}
+
   };
 
   const handleSignIn = async () => {
     try {
       await auth.signIn(email, otp);
       navigate("/dashboard");
-    } catch (e: any) {
-      setError(e.response?.data?.error || "Invalid credentials");
-    }
+    } catch (e: unknown) {
+  if (e && typeof e === "object" && "response" in e) {
+    const error = e as { response?: { data?: { error?: string } } };
+    setError(error.response?.data?.error || "Invalid credentials");
+  } else {
+    setError("Invalid credentials");
+  }
+}
   };
 
   return (

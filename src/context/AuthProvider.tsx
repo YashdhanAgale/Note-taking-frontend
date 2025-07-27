@@ -1,23 +1,14 @@
-import React, { createContext, useState } from "react";
+// src/context/AuthProvider.tsx
+import React, { useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import { signIn, signUp, logout } from "../api/auth";
-
-interface User { id: string; name: string; dob: string; email: string; }
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  signIn: (email: string, otp: string) => Promise<void>;
-  signUp: (name: string, dob: string, email: string, otp: string) => Promise<void>;
-  logOut: () => Promise<void>;
-}
-
-export const AuthContext = createContext<AuthContextType | null>(null);
+import { AuthContext } from "./AuthContext"; // Import context from separate file
+import type { User } from "./AuthContext";
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // On mount, you could call a /me endpoint to fetch user if cookie present.
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -29,7 +20,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const handleSignUp = async (name: string, dob: string, email: string, otp: string) => {
     await signUp({ name, dob, email, otp });
-    // After signup we auto-login via cookie:
     const res = await signIn({ email, otp });
     setUser(res.data.user);
   };
@@ -38,14 +28,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     await logout();
     setUser(null);
   };
-console.log("This is user in auth context: ",user)
+
   return (
-    <AuthContext.Provider value={{
-      user, loading,
-      signIn: handleSignIn,
-      signUp: handleSignUp,
-      logOut: handleLogOut
-    }}>
+    <AuthContext.Provider
+      value={{ user, loading, signIn: handleSignIn, signUp: handleSignUp, logOut: handleLogOut }}
+    >
       {children}
     </AuthContext.Provider>
   );
