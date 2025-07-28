@@ -15,6 +15,7 @@ const SignUp: React.FC = () => {
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<"info" | "otp">("info");
   const [error, setError] = useState("");
+  const [sendingOtp, setSendingOtp] = useState(false);
 
   // Step 1: collect name, dob, email → send OTP
   const handleSendOtp = async () => {
@@ -22,6 +23,7 @@ const SignUp: React.FC = () => {
       setError("All fields are required");
       return;
     }
+    setSendingOtp(true);
     try {
       await sendOtpApi(email);    // POST /api/auth/send-otp { email }
       setError("");
@@ -32,6 +34,8 @@ const SignUp: React.FC = () => {
           ? e.response.data.error
           : "Failed to send OTP";
       setError(msg);
+    } finally {
+      setSendingOtp(false);
     }
   };
 
@@ -94,7 +98,9 @@ const SignUp: React.FC = () => {
                 }}
                 error={error && !email ? error : ""}
               />
-              <Button onClick={handleSendOtp}>Send OTP</Button>
+              <Button onClick={handleSendOtp} disabled={sendingOtp}>
+                {sendingOtp ? "Sending OTP..." : "Send OTP"}
+              </Button>
             </>
           ) : (
             <>
@@ -128,7 +134,7 @@ const SignUp: React.FC = () => {
           )}
 
           <p className="mt-4 text-center">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link to="/signin" className="text-blue-600">
               Sign in
             </Link>

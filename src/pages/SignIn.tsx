@@ -13,21 +13,24 @@ const SignIn: React.FC = () => {
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<"email"|"otp">("email");
   const [error, setError] = useState("");
+  const [sendingOtp, setSendingOtp] = useState(false);
 
   const handleSendOtp = async () => {
+    setSendingOtp(true);
     try {
       await sendOtp(email);
       setStep("otp");
       setError("");
     } catch (e: unknown) {
-  if (e && typeof e === "object" && "response" in e) {
-    const error = e as { response?: { data?: { error?: string } } };
-    setError(error.response?.data?.error || "Failed to send OTP");
-  } else {
-    setError("Failed to send OTP");
-  }
-}
-
+      if (e && typeof e === "object" && "response" in e) {
+        const err = e as { response?: { data?: { error?: string } } };
+        setError(err.response?.data?.error || "Failed to send OTP");
+      } else {
+        setError("Failed to send OTP");
+      }
+    } finally {
+      setSendingOtp(false);
+    }
   };
 
   const handleSignIn = async () => {
@@ -35,13 +38,13 @@ const SignIn: React.FC = () => {
       await auth.signIn(email, otp);
       navigate("/dashboard");
     } catch (e: unknown) {
-  if (e && typeof e === "object" && "response" in e) {
-    const error = e as { response?: { data?: { error?: string } } };
-    setError(error.response?.data?.error || "Invalid credentials");
-  } else {
-    setError("Invalid credentials");
-  }
-}
+      if (e && typeof e === "object" && "response" in e) {
+        const err = e as { response?: { data?: { error?: string } } };
+        setError(err.response?.data?.error || "Invalid credentials");
+      } else {
+        setError("Invalid credentials");
+      }
+    }
   };
 
   return (
@@ -59,7 +62,9 @@ const SignIn: React.FC = () => {
                 onChange={e => setEmail(e.target.value)}
                 error={error}
               />
-              <Button onClick={handleSendOtp}>Send OTP</Button>
+              <Button onClick={handleSendOtp} disabled={sendingOtp}>
+                {sendingOtp ? "Sending OTP..." : "Send OTP"}
+              </Button>
             </>
           ) : (
             <>
@@ -78,13 +83,13 @@ const SignIn: React.FC = () => {
               />
               <button
                 className="text-sm text-blue-600 mb-4"
-                onClick={()=>{ setStep("email"); setOtp(""); }}
+                onClick={()=>{ setStep("email"); setOtp(""); setError(""); }}
               >Resend OTP</button>
               <Button onClick={handleSignIn}>Sign In</Button>
             </>
           )}
           <p className="mt-4 text-center">
-            Need an account?{" "}
+            Need an account? {' '}
             <Link to="/signup" className="text-blue-600">Create one</Link>
           </p>
         </div>
