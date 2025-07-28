@@ -17,7 +17,6 @@ const SignUp: React.FC = () => {
   const [error, setError] = useState("");
   const [sendingOtp, setSendingOtp] = useState(false);
 
-  // Step 1: collect name, dob, email → send OTP
   const handleSendOtp = async () => {
     if (!name || !dob || !email) {
       setError("All fields are required");
@@ -25,7 +24,7 @@ const SignUp: React.FC = () => {
     }
     setSendingOtp(true);
     try {
-      await sendOtpApi(email);    // POST /api/auth/send-otp { email }
+      await sendOtpApi(email);    
       setError("");
       setStep("otp");
     } catch (e: unknown) {
@@ -39,7 +38,6 @@ const SignUp: React.FC = () => {
     }
   };
 
-  // Step 2: submit name, dob, email, otp → signup
   const handleSignUp = async () => {
     if (!otp) {
       setError("OTP is required");
@@ -47,8 +45,7 @@ const SignUp: React.FC = () => {
     }
     try {
       await signUpApi({ name, dob, email, otp });
-      // your backend returns only { message: "Signup successful" }
-      // so redirect to sign-in page:
+   
       navigate("/signin");
     } catch (e: unknown) {
       const msg =
